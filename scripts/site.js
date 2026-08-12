@@ -135,7 +135,7 @@ function renderBrand() {
 
   return `
     <a class="brand" href="${attr(getPageHref("home"))}" aria-label="${attr(`Go to ${shortName || name || "home"} home page`)}">
-      ${logo ? `<img class="brand__logo" src="${attr(getAssetHref(logo))}" alt="${attr(chapter.logoAlt || `${shortName || name} logo`)}">` : ""}
+      ${logo ? `<img class="brand__logo" src="${attr(getAssetHref(logo))}" alt="${attr(chapter.logoAlt || `${shortName || name} logo`)}" loading="lazy" decoding="async">` : ""}
       ${name || location
       ? `<div class="brand__copy">
             ${location ? `<p class="brand__eyebrow">${html(location)}</p>` : ""}
@@ -277,7 +277,7 @@ function renderHomePage(data, categorizedEvents = { upcoming: [], past: [] }) {
             </div>
             ${heroImage
         ? `<aside class="hero__panel">
-                  <img src="${attr(getAssetHref(heroImage))}" alt="${attr(hero.imageAlt || site.chapter?.logoAlt || "")}">
+                  <img src="${attr(getAssetHref(heroImage))}" alt="${attr(hero.imageAlt || site.chapter?.logoAlt || "")}" decoding="async">
                 </aside>`
         : ""}
           </div>
@@ -409,7 +409,7 @@ function renderEventDetailPage(event) {
       .map(
         (imgSrc, idx) => `
             <a href="${attr(getAssetHref(imgSrc))}" target="_blank" rel="noopener noreferrer" class="event-detail__gallery-item">
-              <img src="${attr(getAssetHref(imgSrc))}" alt="${attr(`${title} photo ${idx + 1}`)}" loading="lazy">
+              <img src="${attr(getAssetHref(imgSrc))}" alt="${attr(`${title} photo ${idx + 1}`)}" loading="lazy" decoding="async">
             </a>
           `
       )
@@ -834,7 +834,7 @@ function renderAffiliationSection({ heading, intro, cards, gridClass, logo, logo
             ${logoPath
         ? `<div class="affiliation-logo">
                   ${linkUrl ? `<a href="${attr(linkUrl)}" target="_blank" rel="noopener noreferrer">` : ""}
-                    <img src="${attr(getAssetHref(logoPath))}" alt="${attr(logoAlt)}">
+                    <img src="${attr(getAssetHref(logoPath))}" alt="${attr(logoAlt)}" loading="lazy" decoding="async">
                   ${linkUrl ? `</a>` : ""}
                 </div>`
         : ""}
@@ -953,7 +953,7 @@ function renderMember(member) {
   }
 
   const avatarMarkup = photo
-    ? `<img class="team-member__photo" src="${attr(getAssetHref(photo))}" alt="${attr(name)}" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" /><div class="team-member__avatar-fallback" style="display:none">${html(initials)}</div>`
+    ? `<img class="team-member__photo" src="${attr(getAssetHref(photo))}" alt="${attr(name)}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" /><div class="team-member__avatar-fallback" style="display:none">${html(initials)}</div>`
     : `<div class="team-member__avatar-fallback">${html(initials)}</div>`;
 
   return `
@@ -994,7 +994,7 @@ function renderEvent(event) {
       ${imagePath
       ? `<div class="event__poster-box">
             <a href="${attr(detailUrl)}" title="View event details">
-              <img class="event__poster-img" src="${attr(imagePath)}" alt="${attr(title || "Event thumbnail")}" loading="lazy">
+              <img class="event__poster-img" src="${attr(imagePath)}" alt="${attr(title || "Event thumbnail")}" loading="lazy" decoding="async">
             </a>
            </div>`
       : ""}
