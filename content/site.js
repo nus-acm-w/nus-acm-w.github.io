@@ -27,6 +27,7 @@ export const site = {
     { type: "x", label: "@nusacmw", href: "https://x.com/nusacmw" },
     { type: "email", label: "nusacmwchapter@gmail.com", href: "mailto:nusacmwchapter@gmail.com" },
   ],
+  upcomingEventsEmptyState: "Something is brewing... Check back soon!",
   notFound: {
     message: "This page is not available.",
   },
