@@ -135,13 +135,13 @@ function renderBrand() {
 
   return `
     <a class="brand" href="${attr(getPageHref("home"))}" aria-label="${attr(`Go to ${shortName || name || "home"} home page`)}">
-      ${logo ? `<img class="brand__logo" src="${attr(getAssetHref(logo))}" alt="${attr(chapter.logoAlt || `${shortName || name} logo`)}">` : ""}
+      ${logo ? `<img class="brand__logo" src="${attr(getAssetHref(logo))}" alt="${attr(chapter.logoAlt || `${shortName || name} logo`)}" loading="lazy" decoding="async">` : ""}
       ${name || location
-        ? `<div class="brand__copy">
+      ? `<div class="brand__copy">
             ${location ? `<p class="brand__eyebrow">${html(location)}</p>` : ""}
             ${name ? `<p class="brand__title">${html(name)}${brandSuffix ? ` <span>${html(brandSuffix)}</span>` : ""}</p>` : ""}
           </div>`
-        : ""}
+      : ""}
     </a>
   `;
 }
@@ -245,8 +245,8 @@ function renderPage(currentPage, categorizedEvents = { upcoming: [], past: [] },
       ...(Array.isArray(teamMembers)
         ? { members: teamMembers }
         : typeof teamMembers === "object" && teamMembers !== null
-        ? teamMembers
-        : { members: teamPage.members }),
+          ? teamMembers
+          : { members: teamPage.members }),
     };
     return renderTeamPage(teamData);
   }
@@ -268,7 +268,7 @@ function renderHomePage(data, categorizedEvents = { upcoming: [], past: [] }) {
 
   return `
     ${value(hero.heading) || value(hero.intro) || heroActions || heroImage
-        ? `<section class="hero">
+      ? `<section class="hero">
           <div class="hero__inner${heroImage ? "" : " hero__inner--text-only"}">
             <div>
               ${value(hero.heading) ? `<h1>${html(hero.heading)}</h1>` : ""}
@@ -276,20 +276,20 @@ function renderHomePage(data, categorizedEvents = { upcoming: [], past: [] }) {
               ${heroActions}
             </div>
             ${heroImage
-              ? `<aside class="hero__panel">
-                  <img src="${attr(getAssetHref(heroImage))}" alt="${attr(hero.imageAlt || site.chapter?.logoAlt || "")}">
+        ? `<aside class="hero__panel">
+                  <img src="${attr(getAssetHref(heroImage))}" alt="${attr(hero.imageAlt || site.chapter?.logoAlt || "")}" decoding="async">
                 </aside>`
-              : ""}
+        : ""}
           </div>
         </section>`
       : ""}
 
     ${renderEventSection({
-      heading: eventsPreview.heading || "Upcoming events",
-      intro: eventsPreview.intro,
-      events: visibleEvents,
-      emptyState: eventsPreview.emptyState || "No upcoming events scheduled right now.",
-    })}
+        heading: eventsPreview.heading || "Upcoming events",
+        intro: eventsPreview.intro,
+        events: visibleEvents,
+        emptyState: eventsPreview.emptyState || "Something is brewing... Check back soon!",
+      })}
   `;
 }
 
@@ -307,29 +307,29 @@ function renderAboutPage(data) {
     ${renderPageHeading(data)}
 
     ${renderPillarSection({
-      heading: data.pillars?.title,
-      intro: data.pillars?.intro,
-      items: pillars,
-    })}
+    heading: data.pillars?.title,
+    intro: data.pillars?.intro,
+    items: pillars,
+  })}
 
     ${communityCards.length
       ? renderCardSection({
-          heading: data.communityFocus?.title,
-          intro: data.communityFocus?.intro,
-          cards: communityCards,
-          gridClass: "grid--three",
-        })
+        heading: data.communityFocus?.title,
+        intro: data.communityFocus?.intro,
+        cards: communityCards,
+        gridClass: "grid--three",
+      })
       : ""}
 
     ${renderAffiliationSection({
-      heading: data.context?.title,
-      intro: data.context?.intro,
-      cards: contextCards,
-      gridClass: "grid--two",
-      logo: data.context?.logo,
-      logoAlt: data.context?.logoAlt,
-      url: data.context?.url,
-    })}
+        heading: data.context?.title,
+        intro: data.context?.intro,
+        cards: contextCards,
+        gridClass: "grid--two",
+        logo: data.context?.logo,
+        logoAlt: data.context?.logoAlt,
+        url: data.context?.url,
+      })}
 
     ${value(data.callout?.heading) || value(data.callout?.text) || calloutActions
       ? `<section class="section">
@@ -355,17 +355,17 @@ function renderEventsPage(data, categorizedEvents = { upcoming: [], past: [] }) 
     ${renderPageHeading(data)}
 
     ${renderEventSection({
-      heading: data.upcomingHeading || "Upcoming Events",
-      events: upcomingEvents,
-      emptyState: data.upcomingEmptyState || "No upcoming events scheduled right now. Check back soon!",
-    })}
+    heading: data.upcomingHeading || "Upcoming Events",
+    events: upcomingEvents,
+    emptyState: data.upcomingEmptyState || site.upcomingEventsEmptyState,
+  })}
 
     ${pastEvents.length || newsHeading
       ? renderEventSection({
-          heading: newsHeading,
-          events: pastEvents,
-          emptyState: newsEmptyState,
-        })
+        heading: newsHeading,
+        events: pastEvents,
+        emptyState: newsEmptyState,
+      })
       : ""}
   `;
 }
@@ -381,23 +381,42 @@ function renderEventDetailPage(event) {
   }
 
   const title = value(event.title || "Event");
-  const summary = value(event.summary);
-  const description = value(event.description || summary);
+  const now = new Date();
+  const timeBoundaryStr = event.endDate || event.startDate;
+  const isPast = timeBoundaryStr && !isNaN(new Date(timeBoundaryStr).getTime()) && new Date(timeBoundaryStr) < now;
+
+  const summary = value((isPast ? event.recapSummary || event.summary : event.upcomingSummary || event.summary));
+  const upcomingDesc = !isPast ? value(event.upcomingDescription || event.description) : "";
+  const recapDesc = value(event.recapDescription || (isPast ? event.description : ""));
   const dateStr = value(event.displayDate || event.date);
   const timeStr = formatTo24HourTime(value(event.displayTime || event.time));
   const venueStr = value(event.venue || event.location);
   const poster = value(event.poster || event.image);
   const signUpUrl = value(event.signUpUrl);
-  const tags = toArray(event.tags).map((tag) => value(tag)).filter(Boolean);
+  const gallery = toArray(event.gallery);
 
   const posterPath = poster ? getAssetHref(poster) : "";
 
-  const now = new Date();
-  const timeBoundaryStr = event.endDate || event.startDate;
-  const isPast = timeBoundaryStr && !isNaN(new Date(timeBoundaryStr).getTime()) && new Date(timeBoundaryStr) < now;
   const statusBadge = isPast
     ? `<span class="event-status-badge event-status-badge--past">Recent News</span>`
     : `<span class="event-status-badge event-status-badge--upcoming">Upcoming Event</span>`;
+
+  const galleryMarkup = gallery.length
+    ? `<div class="event-detail__gallery-section">
+        <h3>Event Highlights & Photos</h3>
+        <div class="event-detail__gallery-grid">
+          ${gallery
+      .map(
+        (imgSrc, idx) => `
+            <a href="${attr(getAssetHref(imgSrc))}" target="_blank" rel="noopener noreferrer" class="event-detail__gallery-item">
+              <img src="${attr(getAssetHref(imgSrc))}" alt="${attr(`${title} photo ${idx + 1}`)}" loading="lazy" decoding="async">
+            </a>
+          `
+      )
+      .join("")}
+        </div>
+       </div>`
+    : "";
 
   return `
     <div class="event-detail-page">
@@ -410,44 +429,34 @@ function renderEventDetailPage(event) {
 
       <article class="event-detail">
         <div class="event-detail__sidebar">
-          ${posterPath
-            ? `<div class="event-detail__poster-card">
-                <a href="${attr(posterPath)}" target="_blank" rel="noopener noreferrer" title="Click to view full poster image">
-                  <img class="event-detail__poster-img" src="${attr(posterPath)}" alt="${attr(title)}">
-                </a>
-               </div>`
-            : ""}
-
           <div class="event-detail__cta-card">
             ${signUpUrl && !isPast
-              ? `<a class="button button--primary button--full button--lg" href="${attr(signUpUrl)}" target="_blank" rel="noreferrer">
+      ? `<a class="button button--primary button--full button--lg" href="${attr(signUpUrl)}" target="_blank" rel="noreferrer">
                   Sign Up Now
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
                 </a>`
-              : signUpUrl && isPast
-              ? `<a class="button button--secondary button--full button--disabled" disabled href="#">Registration Closed</a>`
-              : ""}
+      : ""}
 
             <div class="event-detail__info-list">
               ${dateStr
-                ? `<div class="event-detail__info-item">
+      ? `<div class="event-detail__info-item">
                     <svg class="icon-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                     <div>
-                      <strong>Date & Time</strong>
-                      <div>${html(dateStr)}${timeStr ? `<br>${html(timeStr)}` : ""}</div>
+                      <strong>${isPast ? "Date" : "Date & Time"}</strong>
+                      <div>${html(dateStr)}${timeStr && !isPast ? `<br>${html(timeStr)}` : ""}</div>
                     </div>
                   </div>`
-                : ""}
+      : ""}
 
               ${venueStr
-                ? `<div class="event-detail__info-item">
+      ? `<div class="event-detail__info-item">
                     <svg class="icon-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     <div>
                       <strong>Venue</strong>
                       <div>${html(venueStr)}</div>
                     </div>
                   </div>`
-                : ""}
+      : ""}
             </div>
           </div>
         </div>
@@ -462,7 +471,9 @@ function renderEventDetailPage(event) {
           ${summary ? `<p class="event-detail__lead">${html(summary)}</p>` : ""}
 
           <div class="event-detail__description">
-            ${formatMarkdownText(description)}
+            ${galleryMarkup}
+            ${recapDesc ? `<section class="event-detail__section">${formatMarkdownText(recapDesc)}</section>` : ""}
+            ${upcomingDesc ? `<section class="event-detail__section"><h3>About the Event</h3>${formatMarkdownText(upcomingDesc)}</section>` : ""}
           </div>
         </div>
       </article>
@@ -476,15 +487,15 @@ function formatMarkdownText(text) {
   return blocks.map((block) => {
     block = block.trim();
     if (!block) return "";
-    
+
     if (block.startsWith("### ")) {
       const headingText = html(block.slice(4)).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
       return `<h3>${headingText}</h3>`;
     }
-    
+
     const lines = block.split("\n").map((l) => l.trim()).filter(Boolean);
     const isList = lines.length > 0 && lines.every((l) => l.startsWith("- ") || l.startsWith("* "));
-    
+
     if (isList) {
       const items = lines.map((item) => {
         const cleaned = item.replace(/^[-*]\s+/, "");
@@ -493,7 +504,7 @@ function formatMarkdownText(text) {
       }).join("");
       return `<ul>${items}</ul>`;
     }
-    
+
     const formattedParagraph = html(block).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
     return `<p>${formattedParagraph.replace(/\n/g, "<br>")}</p>`;
   }).join("");
@@ -603,11 +614,11 @@ function renderJoinPage(data) {
   const applicationPanel = value(application.title) || value(application.text) || formAction
     ? `<div class="section__cta">
         ${value(application.title) || value(application.text)
-          ? `<div>
+      ? `<div>
               ${value(application.title) ? `<h3>${html(application.title)}</h3>` : ""}
               ${value(application.text) ? `<p>${html(application.text)}</p>` : ""}
             </div>`
-          : ""}
+      : ""}
         ${formAction}
       </div>`
     : "";
@@ -617,9 +628,9 @@ function renderJoinPage(data) {
     ${renderPageHeading(data)}
 
     ${renderCardSection({
-      cards: data.audienceCards,
-      gridClass: "grid--three",
-    })}
+    cards: data.audienceCards,
+    gridClass: "grid--three",
+  })}
 
     ${value(application.heading) || value(application.intro) || applicationPanel
       ? `<section class="section">
@@ -629,12 +640,12 @@ function renderJoinPage(data) {
       : ""}
 
     ${renderCardSection({
-      heading: faq.heading,
-      intro: faq.intro,
-      cards: faq.items,
-      gridClass: "grid--two",
-      cardRenderer: renderFaqCard,
-    })}
+        heading: faq.heading,
+        intro: faq.intro,
+        cards: faq.items,
+        gridClass: "grid--two",
+        cardRenderer: renderFaqCard,
+      })}
   `;
 }
 
@@ -711,11 +722,11 @@ function renderJoinApplication(application) {
   const applicationPanel = value(application.title) || value(application.text) || formAction
     ? `<div class="section__cta">
         ${value(application.title) || value(application.text)
-          ? `<div>
+      ? `<div>
               ${value(application.title) ? `<h3>${html(application.title)}</h3>` : ""}
               ${value(application.text) ? `<p>${html(application.text)}</p>` : ""}
             </div>`
-          : ""}
+      : ""}
         ${formAction}
       </div>`
     : "";
@@ -818,17 +829,17 @@ function renderAffiliationSection({ heading, intro, cards, gridClass, logo, logo
     <section class="section section--affiliation">
       ${headingText ? renderSectionHeader(headingText, "") : ""}
       ${introText || logoPath
-        ? `<div class="affiliation">
+      ? `<div class="affiliation">
             ${introText ? `<p>${formattedIntro}</p>` : ""}
             ${logoPath
-              ? `<div class="affiliation-logo">
+        ? `<div class="affiliation-logo">
                   ${linkUrl ? `<a href="${attr(linkUrl)}" target="_blank" rel="noopener noreferrer">` : ""}
-                    <img src="${attr(getAssetHref(logoPath))}" alt="${attr(logoAlt)}">
+                    <img src="${attr(getAssetHref(logoPath))}" alt="${attr(logoAlt)}" loading="lazy" decoding="async">
                   ${linkUrl ? `</a>` : ""}
                 </div>`
-              : ""}
-          </div>`
         : ""}
+          </div>`
+      : ""}
       ${visibleCards.length ? `<div class="grid ${attr(gridClass || "grid--two")}">${visibleCards.join("")}</div>` : ""}
     </section>
   `;
@@ -856,8 +867,8 @@ function renderEventSection({ heading, intro, events, emptyState }) {
     <section class="section">
       ${renderSectionHeader(heading, intro)}
       ${visibleEvents.length
-        ? `<div class="event-list">${visibleEvents.join("")}</div>`
-        : renderUtilityNote(emptyState)}
+      ? `<div class="event-list">${visibleEvents.join("")}</div>`
+      : renderUtilityNote(emptyState)}
     </section>
   `;
 }
@@ -879,11 +890,11 @@ function renderCallout(callout) {
     <section class="section section--plain">
       <div class="section__cta">
         ${heading || text
-          ? `<div>
+      ? `<div>
               ${heading ? `<h2>${html(heading)}</h2>` : ""}
               ${text ? `<p>${html(text)}</p>` : ""}
             </div>`
-          : ""}
+      : ""}
         ${actions}
       </div>
     </section>
@@ -942,7 +953,7 @@ function renderMember(member) {
   }
 
   const avatarMarkup = photo
-    ? `<img class="team-member__photo" src="${attr(getAssetHref(photo))}" alt="${attr(name)}" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" /><div class="team-member__avatar-fallback" style="display:none">${html(initials)}</div>`
+    ? `<img class="team-member__photo" src="${attr(getAssetHref(photo))}" alt="${attr(name)}" loading="lazy" decoding="async" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';" /><div class="team-member__avatar-fallback" style="display:none">${html(initials)}</div>`
     : `<div class="team-member__avatar-fallback">${html(initials)}</div>`;
 
   return `
@@ -971,20 +982,25 @@ function renderEvent(event) {
     return "";
   }
 
-  const posterPath = poster ? getAssetHref(poster) : "";
+  const now = new Date();
+  const timeBoundaryStr = event?.endDate || event?.startDate;
+  const isPast = timeBoundaryStr && !isNaN(new Date(timeBoundaryStr).getTime()) && new Date(timeBoundaryStr) < now;
+  const gallery = toArray(event?.gallery);
+  const displayImage = isPast && gallery.length ? gallery[0] : (event?.poster || event?.image);
+  const imagePath = displayImage ? getAssetHref(displayImage) : "";
 
   return `
-    <article class="event${posterPath ? " event--has-poster" : ""}">
-      ${posterPath
-        ? `<div class="event__poster-box">
+    <article class="event${imagePath ? " event--has-poster" : ""}">
+      ${imagePath
+      ? `<div class="event__poster-box">
             <a href="${attr(detailUrl)}" title="View event details">
-              <img class="event__poster-img" src="${attr(posterPath)}" alt="${attr(title || "Event poster")}" loading="lazy">
+              <img class="event__poster-img" src="${attr(imagePath)}" alt="${attr(title || "Event thumbnail")}" loading="lazy" decoding="async">
             </a>
            </div>`
-        : ""}
+      : ""}
       <div class="event__details">
         <div class="event__header-meta">
-          ${dateStr ? `<span class="event__date-badge"><svg class="icon-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${html(dateStr)}${timeStr ? ` · ${html(timeStr)}` : ""}</span>` : ""}
+          ${dateStr ? `<span class="event__date-badge"><svg class="icon-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg> ${html(dateStr)}${timeStr && !isPast ? ` · ${html(timeStr)}` : ""}</span>` : ""}
           ${venueStr ? `<span class="event__venue-badge"><svg class="icon-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> ${html(venueStr)}</span>` : ""}
         </div>
         ${title ? `<h3 class="event__title"><a href="${attr(detailUrl)}">${html(title)}</a></h3>` : ""}
@@ -992,7 +1008,7 @@ function renderEvent(event) {
         <div class="event__footer-row">
           <div class="event__actions">
             <a class="button button--secondary button--sm" href="${attr(detailUrl)}">View Details</a>
-            ${event?.signUpUrl ? `<a class="button button--primary button--sm" href="${attr(event.signUpUrl)}" target="_blank" rel="noreferrer">Sign Up</a>` : ""}
+            ${event?.signUpUrl && !isPast ? `<a class="button button--primary button--sm" href="${attr(event.signUpUrl)}" target="_blank" rel="noreferrer">Sign Up</a>` : ""}
           </div>
         </div>
       </div>
