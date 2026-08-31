@@ -30,5 +30,21 @@
     "summary": "PhD student in Computer Science",
     "photo": "assets/images/members/shreyagangopadhyay.jpeg",
     "category": "Executive Committee"
+  },
+  {
+    "id": "spanddhanasara",
+    "name": "Spanddhana Sara",
+    "title": "Marketing Chair",
+    "summary": "PhD student in Computer Science",
+    "photo": "assets/images/members/spanddhanasara.png",
+    "category": "Executive Committee"
+  },
+  {
+    "id": "meenambikachandirakumar",
+    "name": "Meenambika Chandirakumar",
+    "title": "Events Chair",
+    "summary": "PhD student in Computer Science",
+    "photo": "assets/images/members/meenambikachandirakumar.png",
+    "category": "Executive Committee"
   }
 ]
