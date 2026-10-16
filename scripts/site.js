@@ -3,7 +3,7 @@ import { eventsPage } from "../content/events-page.js?v=3";
 import { homePage } from "../content/home.js?v=3";
 import { joinPage } from "../content/join-page.js?v=2";
 import { site } from "../content/site.js?v=3";
-import { teamPage } from "../content/team-page.js?v=3";
+import { teamPage } from "../content/team-page.js?v=4";
 
 const pages = {
   home: homePage,
@@ -36,7 +36,7 @@ async function loadEventsData() {
 
 async function loadTeamData() {
   try {
-    const res = await fetch(getAssetHref("content/team.json"));
+    const res = await fetch(getAssetHref("content/team.json?v=2"));
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data) || (data && (Array.isArray(data.members) || Array.isArray(data.sections)))) {
@@ -559,10 +559,13 @@ function renderTeamPage(data) {
         "Faculty Advisor": "Guiding the chapter's vision, faculty relations, and academic integration.",
         "Executive Committee": "Leading student chapter initiatives, events, membership, and community activities.",
       };
-      const categoryOrder = ["Faculty Advisor", "Executive Committee"];
+      const categoryOrder = ["Faculty Advisor", "Executive Committee", "Core Members"];
 
       members.forEach((m) => {
-        const cat = value(m?.category || m?.group || m?.section) || "Executive Committee";
+        let cat = value(m?.category || m?.group || m?.section) || "Executive Committee";
+        if (cat.toLowerCase() === "core member" || cat.toLowerCase() === "core members") {
+          cat = "Core Members";
+        }
         if (!categoryMap.has(cat)) {
           categoryMap.set(cat, []);
         }
