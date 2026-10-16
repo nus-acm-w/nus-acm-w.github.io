@@ -54,5 +54,29 @@
     "summary": "PhD student in Computer Science",
     "photo": "assets/images/members/sanjaniwickramasinghe.jpeg",
     "category": "Executive Committee"
+  },
+  {
+    "id": "ketakiparanjape",
+    "name": "Ketaki Paranjape",
+    "title": "",
+    "summary": "",
+    "photo": "assets/images/members/KetakiParanjape.heic",
+    "category": "Core Member"
+  },
+  {
+    "id": "mansiwadhwa",
+    "name": "Mansi Wadhwa",
+    "title": "",
+    "summary": "",
+    "photo": "assets/images/members/Mansiwadhwa.jpeg",
+    "category": "Core Member"
+  },
+  {
+    "id": "rajasibarapatre",
+    "name": "Rajasi Barapatre",
+    "title": "",
+    "summary": "",
+    "photo": "assets/images/members/RajasiBarapatre.heic",
+    "category": "Core Member"
   }
 ]
