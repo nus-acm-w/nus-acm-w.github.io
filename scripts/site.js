@@ -1,8 +1,8 @@
 import { aboutPage } from "../content/about.js?v=2";
 import { eventsPage } from "../content/events-page.js?v=2";
-import { homePage } from "../content/home.js?v=2";
+import { homePage } from "../content/home.js?v=3";
 import { joinPage } from "../content/join-page.js?v=2";
-import { site } from "../content/site.js?v=2";
+import { site } from "../content/site.js?v=3";
 import { teamPage } from "../content/team-page.js?v=3";
 
 const pages = {

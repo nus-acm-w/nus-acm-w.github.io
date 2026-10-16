@@ -25,7 +25,7 @@ export const aboutPage = {
     title: "Regional Network",
     intro: "NUS ACM-W is proud to be part of ACM-W Asia Pacific (ACM-W AP), connecting our NUS community with a broader regional network of chapters, leaders, and advocates dedicated to celebrating women in computing.",
     url: "https://acmwasiapacific.acm.org/",
-    logo: "assets/images/acmw-logo-asia-pacific.jpg",
+    logo: "assets/logo/acmw-logo-asia-pacific.jpg",
     logoAlt: "ACM-W Asia Pacific logo",
   },
   callout: {

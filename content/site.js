@@ -8,9 +8,9 @@ export const site = {
     name: "NUS ACM-W Chapter",
     shortName: "NUS ACM-W",
     location: "National University of Singapore",
-    logo: "assets/images/acmw-singapore-student.png",
+    logo: "assets/logo/nus_acm-w_logo.svg",
     logoAlt: "NUS ACM-W chapter logo",
-    favicon: "assets/images/acmw-singapore-student.png",
+    favicon: "assets/logo/nus_acm-w_logo.svg",
   },
   labels: {
     eventDate: "When",

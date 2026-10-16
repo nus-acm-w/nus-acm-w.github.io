@@ -1,4 +1,4 @@
-import { site } from "./site.js?v=2";
+import { site } from "./site.js?v=3";
 
 export const homePage = {
   title: "Home",
@@ -6,7 +6,7 @@ export const homePage = {
   hero: {
     heading: "NUS ACM-W Student Chapter",
     intro: "Building a supportive, inclusive community for women and gender-diverse students in computing at the National University of Singapore.",
-    image: "assets/images/acmw-singapore-student.png",
+    image: "assets/logo/nus_acm-w_logo.svg",
     imageAlt: "NUS ACM-W Chapter Logo",
     actions: [
       { label: "About Us", page: "about", variant: "primary" },
