@@ -1,4 +1,4 @@
-import { site } from "./site.js?v=2";
+import { site } from "./site.js?v=3";
 
 export const eventsPage = {
   title: "Events & News",

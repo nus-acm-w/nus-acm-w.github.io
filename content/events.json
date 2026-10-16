@@ -1,5 +1,28 @@
 [
   {
+    "id": "lovelace-day-2026",
+    "title": "Ada Lovelace Day 2026: Inauguration of the Lovelace Loop",
+    "summary": "NUS ACM-W and Women in Tech @ NUS Computing celebrated Ada Lovelace Day with the grand inauguration of 'Lovelace Loop'—a dedicated new SIG room and collaborative space for women in tech to connect, collaborate, and grow at NUS Computing.",
+    "poster": "assets/events/2026-10-13-lovelace-day.jpg",
+    "upcomingSummary": "Join NUS ACM-W and Women in Tech @ NUS Computing for the grand opening of our new SIG room: 'Lovelace Loop' on Ada Lovelace Day!",
+    "upcomingDescription": "Join us on Ada Lovelace Day as we inaugurate our new SIG room, the 'Lovelace Loop'—a space for women in tech to connect, collaborate, and grow.\n\nEvent Highlights:\n- Inauguration of the 'Lovelace Loop' SIG room\n- Special exhibit on the life and legacy of Ada Lovelace, a pioneer in computing\n- Refreshments provided\n- Fun quizzes and activities\n- Merch up for grabs!",
+    "recapSummary": "NUS ACM-W and Women in Tech @ NUS Computing celebrated Ada Lovelace Day with the grand inauguration of 'Lovelace Loop'—a dedicated new SIG room and collaborative space for women in tech to connect, collaborate, and grow at NUS Computing. The event featured a special exhibit on Ada Lovelace, interactive activities, fun quizzes, refreshments, exclusive merch, and room opening graced by SoC leadership.",
+    "recapDescription": "On 13th October 2026, the NUS ACM-W Student Chapter, in joint collaboration with Women in Tech @ NUS Computing, celebrated Ada Lovelace Day with the inauguration of our brand-new SIG room: **\"Lovelace Loop\"**!\n\n### A Dedicated Space for Women in Tech\n\nThe **Lovelace Loop** is a welcoming new hub at the School of Computing created as a space for women in tech to connect, collaborate, and grow.\n\n### Graced by SoC Leadership\n\nWe were deeply honored that the room opening was graced by the presence of distinguished School of Computing leadership:\n\n- **Dr. Bimlesh Wadhwa**, Vice-Dean, Student Life\n- **Dr. Akshay Narayan**, Assistant Dean, Student Life\n\nOur faculty joined in celebrating this major milestone, offering warm words of encouragement on community building and fostering inclusive spaces across computing.\n\n### Highlights & Activities\n\nStudents and faculty gathered in the new room to celebrate the occasion with an array of engaging activities:\n\n- **Ada Lovelace Exhibit:** A special exhibit honoring the life, pioneering legacy, and visionary computing contributions of Ada Lovelace, a pioneer in computing.\n- **Interactive Reflection Wall:** An interactive reflection whiteboard where students shared inspiring thoughts and personal journeys in computing.\n- **Fun Quizzes & Games:** An exciting trivia competition and games celebrating women in computing and Ada Lovelace.\n- **Refreshments & Merch:** Attendees enjoyed delicious refreshments and took home exclusive merch!\n\nThank you to everyone who joined us to celebrate Ada Lovelace Day and inaugurate the Lovelace Loop! We look forward to seeing the community make this space their own.",
+    "gallery": [
+      "assets/news/2026-10-13/PXL_20261013_092614194.MP.jpg",
+      "assets/events/2026-10-13-lovelace-day.jpg",
+      "assets/news/2026-10-13/PXL_20261013_071708487.jpg",
+      "assets/news/2026-10-13/PXL_20261013_071645843.MP.jpg",
+      "assets/news/2026-10-13/PXL_20261013_094030785.jpg",
+      "assets/news/2026-10-13/PXL_20261013_094041695.jpg"
+    ],
+    "startDate": "2026-10-13T14:00:00+08:00",
+    "endDate": "2026-10-13T18:00:00+08:00",
+    "displayDate": "13 October 2026",
+    "displayTime": "14:00 - 18:00 SGT",
+    "venue": "Lovelace Loop SIG Room"
+  },
+  {
     "id": "coffee-chat-aug-2026",
     "title": "Inaugural Coffee Chat: Connecting Students and Leaders",
     "summary": "As a new chapter, NUS ACM-W hosted its inaugural Coffee Chat for Master's and PhD students alongside SoC leadership for mentorship, shared experiences, and community building.",

@@ -1,5 +1,5 @@
 import { aboutPage } from "../content/about.js?v=2";
-import { eventsPage } from "../content/events-page.js?v=2";
+import { eventsPage } from "../content/events-page.js?v=3";
 import { homePage } from "../content/home.js?v=3";
 import { joinPage } from "../content/join-page.js?v=2";
 import { site } from "../content/site.js?v=3";
@@ -21,7 +21,7 @@ const isHomePage = page === "home";
 
 async function loadEventsData() {
   try {
-    const res = await fetch(getAssetHref("content/events.json"));
+    const res = await fetch(getAssetHref("content/events.json?v=4"));
     if (res.ok) {
       const data = await res.json();
       if (Array.isArray(data)) {
@@ -488,25 +488,51 @@ function formatMarkdownText(text) {
     block = block.trim();
     if (!block) return "";
 
-    if (block.startsWith("### ")) {
-      const headingText = html(block.slice(4)).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-      return `<h3>${headingText}</h3>`;
-    }
-
     const lines = block.split("\n").map((l) => l.trim()).filter(Boolean);
-    const isList = lines.length > 0 && lines.every((l) => l.startsWith("- ") || l.startsWith("* "));
+    let htmlOutput = "";
+    let currentList = [];
+    let pLines = [];
 
-    if (isList) {
-      const items = lines.map((item) => {
-        const cleaned = item.replace(/^[-*]\s+/, "");
-        const formatted = html(cleaned).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-        return `<li>${formatted}</li>`;
-      }).join("");
-      return `<ul>${items}</ul>`;
+    const flushList = () => {
+      if (currentList.length) {
+        const items = currentList.map((item) => {
+          const cleaned = item.replace(/^[-*]\s+/, "");
+          const formatted = html(cleaned).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+          return `<li>${formatted}</li>`;
+        }).join("");
+        htmlOutput += `<ul>${items}</ul>`;
+        currentList = [];
+      }
+    };
+
+    const flushParagraph = () => {
+      if (pLines.length) {
+        const pText = pLines.join("<br>");
+        htmlOutput += `<p>${pText}</p>`;
+        pLines = [];
+      }
+    };
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (line.startsWith("### ")) {
+        flushList();
+        flushParagraph();
+        const headingText = html(line.slice(4)).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        htmlOutput += `<h3>${headingText}</h3>`;
+      } else if (line.startsWith("- ") || line.startsWith("* ")) {
+        flushParagraph();
+        currentList.push(line);
+      } else {
+        flushList();
+        const formattedLine = html(line).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+        pLines.push(formattedLine);
+      }
     }
+    flushList();
+    flushParagraph();
 
-    const formattedParagraph = html(block).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    return `<p>${formattedParagraph.replace(/\n/g, "<br>")}</p>`;
+    return htmlOutput;
   }).join("");
 }
 
